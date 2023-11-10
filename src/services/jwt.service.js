@@ -1,4 +1,4 @@
-const ID_TOKEN_KEY = "currenToken";
+const ID_TOKEN_KEY = "JWT_TOKEN";
 
 export const getToken = () => {
 	return window.localStorage.getItem(ID_TOKEN_KEY);

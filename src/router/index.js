@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+// import authService from "@/services/auth.service";
+import { useUserStore } from "@/stores/userStore";
 import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
@@ -10,13 +12,37 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
+      path: '/danh-muc-san-pham',
+      component: () => import('../views/DanhMucSanPhamView.vue')
+    },
+    // {
+    //   path: '/gio-hang',
+    //   component: () => import('../views/GioHangView.vue')
+    // },
+    // {
+    //   path: '/hoa-don',
+    //   component: () => import('../views/HoaDonView.vue')
+    // }
+    // ,
+		{
+			path: "/auth/signin",
+			component: () => import("@/views/SignInView.vue"),
+			beforeEnter() {
+				const userStore = useUserStore();
+
+				if (userStore.currentUser) return "/";
+			},
+		},
+		{
+			path: "/auth/signup",
+			component: () =>
+				import("@/views/SignUpView.vue"),
+			beforeEnter() {
+				const userStore = useUserStore();
+
+				if (userStore.currentUser) return "/";
+			},
+		},
   ]
 })
 

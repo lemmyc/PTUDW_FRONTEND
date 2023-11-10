@@ -3,12 +3,11 @@ import axios from "axios";
 
 export default function Request(baseURL) {
 	const client = axios.create({
-		baseURL: `http://localhost:3000/${baseURL}`,
+		baseURL: `http://localhost:3000/api/${baseURL}`,
 	});
 
 	client.interceptors.request.use((req) => {
 		req.headers.Authorization = `Bearer ${Token.token}`;
-
 		return req;
 	});
 	client.interceptors.response.use((res) => {
@@ -24,7 +23,9 @@ export class ApiService {
 	getAll(params) {
 		return this.api.get("/", { ...params });
 	}
-
+	getByQuery(query){
+		return this.api.get(query)
+	}
 	getById(id) {
 		return this.api.get(id);
 	}

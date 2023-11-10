@@ -1,9 +1,9 @@
 import Request from "./api.service";
 class AuthService {
-	constructor(baseUrl = "") {
+	constructor(baseUrl = "/") {
 		this.api = Request(baseUrl);
 	}
-	async signup(path = "khachhang/", payload) {
+	async signup(payload, path = "khachhang/") {
 		return await this.api.post(path, payload);
 	}
 	async signin(payload) {
