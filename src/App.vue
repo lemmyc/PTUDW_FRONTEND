@@ -6,29 +6,31 @@ import AppHeader from './components/layout/AppHeader.vue';
 <template>
   <header>
     <div>
-      <AppHeader/>
-      <RouterView/>
+      <AppHeader />
+      <RouterView />
     </div>
   </header>
 </template>
 
 <style >
-  ::-webkit-scrollbar {
-  width: 3px;
-  /* border: 50%; */
+.el-table .cell {
+  word-break: normal;
 }
 
-/* Track */
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+
+
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #888;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }

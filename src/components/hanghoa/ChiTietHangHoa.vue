@@ -1,7 +1,7 @@
 <script setup>
 import currencyFormater from "@/utils/currencyFormatter";
 import { ElNotification } from "element-plus";
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 const visible = ref(false);
 const props = defineProps({
     hanghoa: {
@@ -9,26 +9,42 @@ const props = defineProps({
         required: true
     }
 });
-let currentCart = JSON.parse(window.localStorage.getItem("userCart")) || [];
-let posExist = currentCart.findIndex(element => element.mahanghoa === props.hanghoa._id)
-const soluong = ref(posExist !== -1 ? currentCart[posExist].soluong : 1);
+let donDatHang = JSON.parse(window.localStorage.getItem("donDatHang")) || [];
+let posExist = donDatHang.findIndex(element => element.mahanghoa === props.hanghoa._id)
+const soluong = ref(posExist !== -1 ? donDatHang[posExist].soluong : 1);
 
 async function addToCart() {
     try {
         if (soluong.value <= props.hanghoa.soluong){
-            let currentCart = JSON.parse(window.localStorage.getItem("userCart")) || [];
-            let posExist = currentCart.findIndex(element => element.mahanghoa === props.hanghoa._id)
+            let donDatHang = JSON.parse(window.localStorage.getItem("donDatHang")) || []; //Gui di
+            let userCart = JSON.parse(window.localStorage.getItem("userCart")) || []; //Hien thi
+            let posExist = donDatHang.findIndex(element => element.mahanghoa === props.hanghoa._id)
             if (posExist !== -1){
-                currentCart.splice(posExist, 1)
+                donDatHang.splice(posExist, 1)
+                userCart.splice(posExist, 1)
             }
-            currentCart.push({
+            donDatHang.push({
                 mahanghoa: props.hanghoa._id,
                 soluong: soluong.value,
                 giagoc: props.hanghoa.gia,
                 phantramgiam: props.hanghoa.giamgia,
-                giadagiam: `${(props.hanghoa.gia) * (100 - props.hanghoa.giamgia) / 100}`
+                giadagiam: (props.hanghoa.gia) * (100 - props.hanghoa.giamgia) / 100,
+                thanhtien: ((props.hanghoa.gia) * (100 - props.hanghoa.giamgia) / 100) * soluong.value
             })
-            window.localStorage.setItem("userCart", JSON.stringify(currentCart));
+            userCart.push({
+                mahanghoa: props.hanghoa._id,
+                urlhinh: props.hanghoa.urlhinh,
+                tenhanghoa: props.hanghoa.tenhanghoa,
+                loaihanghoa: props.hanghoa.loaihanghoa,
+                soluong: soluong.value,
+                soluongkho: props.hanghoa.soluong,
+                giagoc: props.hanghoa.gia,
+                phantramgiam: props.hanghoa.giamgia,
+                giadagiam: (props.hanghoa.gia) * (100 - props.hanghoa.giamgia) / 100,
+                thanhtien: ((props.hanghoa.gia) * (100 - props.hanghoa.giamgia) / 100) * soluong.value
+            })
+            window.localStorage.setItem("donDatHang", JSON.stringify(donDatHang));
+            window.localStorage.setItem("userCart", JSON.stringify(userCart));
             ElNotification.success("Thêm vào giỏ hàng thành công");
             visible.value = false;
         }
@@ -44,7 +60,7 @@ async function addToCart() {
     <el-card shadow="hover">
         <div class="">
             <div class="d-flex"><img :src="`${hanghoa.urlhinh}`" class="product-img" alt={{hanghoa.tenhanghoa}}></div>
-            <h6>{{ hanghoa.tenhanghoa }}</h6>
+            <h6 style="height: 48px;">{{ hanghoa.tenhanghoa }}</h6>
 
             <p>Loại: {{ hanghoa.loaihanghoa }}</p>
 
@@ -98,8 +114,13 @@ async function addToCart() {
             Số lượng trong kho: {{ hanghoa.soluong }}
         </p>
 
-        <el-input-number placeholder="Số lượng cần đặt" v-model="soluong"></el-input-number>
-
+        <el-input-number placeholder="Số lượng cần đặt" v-model="soluong" :min="1" :max="hanghoa.soluong"></el-input-number>
+        <p>
+            <el-icon>
+                <Money></Money>
+            </el-icon>
+            Tổng tiền: {{ currencyFormater.format(soluong * ((hanghoa.gia) * (100 - hanghoa.giamgia) / 100)) }}
+        </p>
         <template #footer>
             <el-button @click="visible = false">Hủy</el-button>
             <el-button @click="addToCart" type="success">

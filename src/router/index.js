@@ -15,10 +15,10 @@ const router = createRouter({
       path: '/danh-muc-san-pham',
       component: () => import('../views/DanhMucSanPhamView.vue')
     },
-    // {
-    //   path: '/gio-hang',
-    //   component: () => import('../views/GioHangView.vue')
-    // },
+    {
+      path: '/gio-hang',
+      component: () => import('../views/GioHangView.vue')
+    },
     // {
     //   path: '/hoa-don',
     //   component: () => import('../views/HoaDonView.vue')
