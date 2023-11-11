@@ -1,4 +1,7 @@
 <script setup>
+import { useUserStore } from "@/stores/userStore";
+
+const userStore = useUserStore();
 </script>
 
 <template>
@@ -12,7 +15,7 @@
           <h6>CHƠI GAME VÀ GIẢI TRÍ BẤT TẬN</h6>
           <h2>Cửa hàng linh kiện máy tính cao cấp</h2>
           <h2><em> DANGLE-PC</em></h2>
-          <div class="main-button scroll-to-section">
+          <div v-if="!userStore.currentUser" class="main-button scroll-to-section">
             <router-link to="/auth/signup">
               <h5>Đăng ký tài khoản và mua sắm ngay !</h5>
             </router-link>

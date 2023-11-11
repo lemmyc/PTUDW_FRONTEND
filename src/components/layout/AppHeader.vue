@@ -29,15 +29,20 @@ const logout = () => {
                                 <router-link to="/">Trang chủ</router-link>
                             </li>
 
-                            <li class="scroll-to-section">
+                            <li class="scroll-to-section" v-if="userStore.currentUser?.lakhachhang">
                                 <router-link to="/danh-muc-san-pham">Danh mục sản phẩm</router-link>
                             </li>
+
+                            <li class="scroll-to-section" v-if="userStore.currentUser?.lanhanvien">
+                                <router-link to="/nhan-vien/danh-muc-san-pham">Danh mục sản phẩm (NV)</router-link>
+                            </li>
+
                             <li v-if="userStore.currentUser?.lakhachhang" class="scroll-to-section">
                                 <router-link to="/gio-hang">Giỏ hàng</router-link>
                             </li>
 
                             <li v-if="userStore.currentUser?.lanhanvien" class="scroll-to-section">
-                                <router-link to="/tiep-nhan-don-hang">Tiếp nhận đơn hàng</router-link>
+                                <router-link to="/nhan-vien/tiep-nhan-don-hang">Tiếp nhận đơn hàng</router-link>
                             </li>
 
                             <el-dropdown trigger="click" v-if="userStore.currentUser">
@@ -46,14 +51,26 @@ const logout = () => {
                                 </el-button>
                                 <template #dropdown>
                                     <el-dropdown-menu>
-                                        <router-link to="/don-dat-hang">
+
+                                        <router-link v-if="userStore.currentUser?.lakhachhang" to="/don-dat-hang">
                                             <el-dropdown-item>
                                                 Đơn đặt hàng
                                             </el-dropdown-item>
                                         </router-link>
-                                        <router-link to="/chinh-sua-thong-tin">
+                                        <router-link v-if="userStore.currentUser?.lakhachhang" to="/chinh-sua-thong-tin">
                                             <el-dropdown-item>
-                                                Chỉnh sửa thông tin cá nhân
+                                                Thông tin cá nhân
+                                            </el-dropdown-item>
+                                        </router-link>
+
+                                        <router-link v-if="userStore.currentUser?.lanhanvien" to="/nhan-vien/don-hang-da-tiep-nhan">
+                                            <el-dropdown-item>
+                                                Đơn đã tiếp nhận
+                                            </el-dropdown-item>
+                                        </router-link>
+                                        <router-link v-if="userStore.currentUser?.lanhanvien" to="/nhan-vien/chinh-sua-thong-tin">
+                                            <el-dropdown-item>
+                                                Thông tin cá nhân
                                             </el-dropdown-item>
                                         </router-link>
 

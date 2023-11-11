@@ -60,14 +60,24 @@ async function themDonDatHang() {
 			"danhsachhanghoa": donDatHang?._rawValue,
 			"tongtien": tongTien.value
 		}
-		await donDatHangService.create(payload);
 
-		ElNotification.success("Tạo đơn đặt hàng thành công. Cảm ơn quý khách đã ủng hộ DANGLE-PC");
-		userCart.value = [];
-		donDatHang.value = [];
-		window.localStorage.setItem("userCart", JSON.stringify([]));
-		window.localStorage.setItem("donDatHang", JSON.stringify([]));
-		donDathangVisible.value = false;
+		if(
+			// ms -> day
+			(((new Date(payload.ngaygh)) - (new Date(payload.ngaydh)))
+			/ (1000 * 60 * 60 * 24)) >= 5 
+		){
+			await donDatHangService.create(payload);
+			ElNotification.success("Tạo đơn đặt hàng thành công. Cảm ơn quý khách đã ủng hộ DANGLE-PC");
+			userCart.value = [];
+			donDatHang.value = [];
+			window.localStorage.setItem("userCart", JSON.stringify([]));
+			window.localStorage.setItem("donDatHang", JSON.stringify([]));
+			donDathangVisible.value = false;
+		}
+		else{
+			ElNotification.error("Ngày giao hàng chỉ định phải sau ngày đặt hàng tối thiểu 5 ngày.");
+		}
+
 	} catch (error) {
 		ElNotification.error(error);
 	}

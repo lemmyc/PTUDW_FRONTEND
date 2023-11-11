@@ -15,15 +15,23 @@ const router = createRouter({
       path: '/danh-muc-san-pham',
       component: () => import('../views/DanhMucSanPhamView.vue')
     },
+    
     {
       path: '/gio-hang',
       component: () => import('../views/GioHangView.vue')
     },
-    // {
-    //   path: '/hoa-don',
-    //   component: () => import('../views/HoaDonView.vue')
-    // }
-    // ,
+    {
+      path: '/don-dat-hang',
+      component: () => import('../views/DonDatHangView.vue')
+    },
+    {
+      path: '/chinh-sua-thong-tin',
+      component: () => import('../views/ChinhSuaThongTinView.vue')
+    },
+    {
+      path: '/nhan-vien/chinh-sua-thong-tin',
+      component: () => import('../views/NhanVien/ChinhSuaThongTinView.vue')
+    },
 		{
 			path: "/auth/signin",
 			component: () => import("@/views/SignInView.vue"),
@@ -43,6 +51,34 @@ const router = createRouter({
 				if (userStore.currentUser) return "/";
 			},
 		},
+    {
+      path: '/nhan-vien/danh-muc-san-pham',
+      component: () =>
+				import("../views/NhanVien/DanhMucSanPhamView.vue"),
+			beforeEnter() {
+				const userStore = useUserStore();
+
+				if (!userStore.currentUser.lanhanvien) return "/";
+			},
+    },
+    {
+      path: '/nhan-vien/tiep-nhan-don-hang',
+      component: () =>
+				import("../views/NhanVien/TiepNhanDonHangView.vue"),
+			beforeEnter() {
+				const userStore = useUserStore();
+				if (!userStore.currentUser.lanhanvien) return "/";
+			},
+    },
+    {
+      path: '/nhan-vien/don-hang-da-tiep-nhan',
+      component: () =>
+				import("../views/NhanVien/DonHangDaTiepNhanView.vue"),
+			beforeEnter() {
+				const userStore = useUserStore();
+				if (!userStore.currentUser.lanhanvien) return "/";
+			},
+    },
   ]
 })
 

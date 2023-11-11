@@ -6,7 +6,7 @@ class DonDatHangService extends ApiService {
 		this.api = Request("dondathang/");
 	}
 	confirm(payload){
-		return this.api.post("dondathang/", payload);
+		return this.api.put("/",payload);
 	}
 }
 
