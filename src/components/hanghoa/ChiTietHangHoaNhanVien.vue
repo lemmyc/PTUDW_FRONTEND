@@ -69,27 +69,29 @@ const formRules = reactive({
     ],
 
 });
-
 async function editItem() {
-    try {
-		await hangHoaService.update(props.hanghoa._id, form);
-		ElNotification.success("Thông tin hàng hóa cập nhật thành công !");
-        props.fetchHangHoa();
-        visible.value = false;
-    } catch (error) {
-        console.log(error);
-    }
-}
+    formRef.value.validate(async (valid) => {
+        if (!valid) return;
+
+        try {
+            await hangHoaService.update(props.hanghoa._id, form);
+            ElNotification.success("Thông tin hàng hóa cập nhật thành công !");
+            props.fetchHangHoa();
+            visible.value = false;
+        } catch (error) {
+            ElNotification.error(error.response.data.msg);
+        }
+    })
+};
 </script>
 
 <template>
-    <el-card shadow="hover">
-        <div class="">
-            <div class="d-flex"><img :src="`${hanghoa.urlhinh}`" class="product-img" alt={{hanghoa.tenhanghoa}}></div>
-            <h6 style="height: 48px;">{{ hanghoa.tenhanghoa }}</h6>
-
+    <el-card style="margin: 8px 0;" shadow="hover">
+        <div>
+            <div class="d-flex mb-3"><img :src="`${hanghoa.urlhinh}`" class="product-img" alt={{hanghoa.tenhanghoa}}></div>
+            <h6 style="height: 64px;">{{ hanghoa.tenhanghoa }}</h6>
             <p>Loại: {{ hanghoa.loaihanghoa }}</p>
-
+            <p style="height: 80px;">Mô tả: {{ hanghoa.motahanghoa }}</p>
             <el-divider></el-divider>
             <p v-if="hanghoa.giamgia > 0" style="color: red;">Giảm giá : {{ hanghoa.giamgia }} %</p>
             <p v-else style="color: #fff;  pointer-events: none;">V</p>
@@ -131,32 +133,30 @@ async function editItem() {
             </div>
         </template>
 
-        <el-form :model="form" :rules="formRules" class="row justify-content-between" ref="formRef"
-            label-width="120px" label-position="top" status-icon>
+        <el-form :model="form" :rules="formRules" class="row justify-content-between" ref="formRef" label-width="120px"
+            label-position="top" status-icon>
             <el-form-item class="w-25 m-2" label="Tên hàng hóa" prop="tenhanghoa">
                 <el-input placeholder="Tên hàng hóa" v-model="form.tenhanghoa"></el-input>
             </el-form-item>
-            <el-form-item class="w-25 m-2"  label="Loại hàng hóa" prop="loaihanghoa">
+            <el-form-item class="w-25 m-2" label="Loại hàng hóa" prop="loaihanghoa">
                 <el-input placeholder="Loại hàng hóa" v-model="form.loaihanghoa"></el-input>
             </el-form-item>
-            
-            
-            <el-form-item class="w-25 m-2"  label="Số lượng hàng hóa" prop="soluong">
+            <el-form-item class="w-25 m-2" label="Số lượng hàng hóa" prop="soluong">
                 <el-input placeholder="Số lượng hàng hóa" v-model="form.soluong"></el-input>
             </el-form-item>
-            <el-form-item class="w-25 m-2"  label="Giá hàng hóa" prop="gia">
+            <el-form-item class="w-25 m-2" label="Giá hàng hóa" prop="gia">
                 <el-input placeholder="Giá hàng hóa" v-model="form.gia"></el-input>
             </el-form-item>
-            <el-form-item class="w-25 m-2"  label="Phần trăm giảm giá" prop="giamgia">
+            <el-form-item class="w-25 m-2" label="Phần trăm giảm giá" prop="giamgia">
                 <el-input placeholder="Phần trăm giảm giá" v-model="form.giamgia"></el-input>
             </el-form-item>
-            <el-form-item class="w-25 m-2"  label="Ghi chú nội bộ của hàng hóa" prop="mota">
-                <el-input placeholder="Ghi chú nội bộ của hàng hóa" v-model="form.mota"></el-input>
+            <el-form-item class="w-25 m-2" label="Ghi chú cho hàng hóa" prop="ghichu">
+                <el-input placeholder="Ghi chú cho hàng hóa" v-model="form.ghichu"></el-input>
             </el-form-item>
-            <el-form-item class="w-100 m-2"  label="Mô tả hàng hóa" prop="motahanghoa">
+            <el-form-item class="w-100 m-2" label="Mô tả hàng hóa" prop="motahanghoa">
                 <el-input placeholder="Mô tả hàng hóa" v-model="form.motahanghoa"></el-input>
             </el-form-item>
-            <el-form-item class="w-100 m-2"  label="URL ảnh hàng hóa" prop="urlhinh">
+            <el-form-item class="w-100 m-2" label="URL ảnh hàng hóa" prop="urlhinh">
                 <el-input placeholder="URL ảnh hàng hóa" v-model="form.urlhinh"></el-input>
             </el-form-item>
         </el-form>

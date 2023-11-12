@@ -57,12 +57,13 @@ async function addToCart() {
 </script>
 
 <template>
-    <el-card shadow="hover">
+    <el-card style="margin: 8px 0;" shadow="hover">
         <div class="">
-            <div class="d-flex"><img :src="`${hanghoa.urlhinh}`" class="product-img" alt={{hanghoa.tenhanghoa}}></div>
-            <h6 style="height: 48px;">{{ hanghoa.tenhanghoa }}</h6>
+            <div class="d-flex  mb-3"><img :src="`${hanghoa.urlhinh}`" class="product-img" alt={{hanghoa.tenhanghoa}}></div>
+            <h6 style="height: 64px;">{{ hanghoa.tenhanghoa }}</h6>
 
             <p>Loại: {{ hanghoa.loaihanghoa }}</p>
+            <p style="height: 80px;">Mô tả: {{ hanghoa.motahanghoa }}</p>
 
             <el-divider></el-divider>
             <p v-if="hanghoa.giamgia > 0" style="color: red;">Giảm giá : {{ hanghoa.giamgia }} %</p>

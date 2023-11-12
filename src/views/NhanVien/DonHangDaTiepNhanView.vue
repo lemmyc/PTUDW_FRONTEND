@@ -76,7 +76,7 @@ onMounted(() => {
 							{{ scope.$index + 1 }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="danhsachhanghoa" label="Sản phẩm đã mua" align="center">
+					<el-table-column prop="danhsachhanghoa" label="Sản phẩm của đơn hàng" align="center">
 						<template v-slot="scope">
 							<ul>
 								<li v-for="(item, index) in scope.row.danhsachhanghoa" v-bind:key="index">
