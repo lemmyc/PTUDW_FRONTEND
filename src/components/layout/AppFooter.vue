@@ -1,11 +1,4 @@
 <script setup>
-import Token from "@/utils/token";
-import { ElButton } from "element-plus";
-import { useRouter } from "vue-router";
-import { useUserStore } from "@/stores/userStore.js";
-
-// console.log(userStore.currentUser)
-
 </script>
 <template>
     <footer class="pb-0">
