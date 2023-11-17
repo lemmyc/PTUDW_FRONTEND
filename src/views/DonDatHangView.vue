@@ -108,11 +108,16 @@ onMounted(() => {
 								scope.row.manhanvien)?.hoten : "(đơn hàng chưa được tiếp nhận)" }}
 						</template>
 					</el-table-column>
+					<el-table-column prop="trangthaigh" label="Trạng thái giao hàng" header-align="center" align="right">
+						<template v-slot="scope">
+							{{ scope.row.trangthaigh === false ? "Chưa giao hàng" : "Đã giao hàng" }}
+						</template>
+					</el-table-column>
 				</el-table>
 			</div>
 
-			<h6 class="mt-3"><em>LƯU Ý: Bạn không thể xóa đơn hàng đã đặt. Hãy vui lòng liên hệ nhân viên theo số
-						hotline 19006688 để được giải quyết !</em></h6>
+			<h6 class="mt-3">LƯU Ý: Bạn không thể xóa đơn hàng đã đặt. Hãy vui lòng liên hệ nhân viên theo số
+				hotline <strong><em>1900 6688</em></strong> để được giải quyết !</h6>
 		</div>
 	</div>
 </template>
@@ -120,4 +125,5 @@ onMounted(() => {
 <style scoped>
 .container {
 	margin-top: 5rem;
-}</style>
+}
+</style>

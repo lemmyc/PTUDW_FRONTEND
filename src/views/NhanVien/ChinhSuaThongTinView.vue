@@ -72,6 +72,10 @@ function editInfo() {
 						<el-input placeholder="Họ tên" v-model="form.hoten"></el-input>
 					</el-form-item>
 
+					<el-form-item label="Chức vụ" prop="chucvu" >
+						<el-input :disabled=true placeholder="Chức vụ" v-model="userStore.currentUser.info.chucvu"></el-input>
+					</el-form-item>
+
 					<el-form-item label="Địa chỉ" prop="diachi">
 						<el-input placeholder="Địa chỉ" v-model="form.diachi"></el-input>
 					</el-form-item>
