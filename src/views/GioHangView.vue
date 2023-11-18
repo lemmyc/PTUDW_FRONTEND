@@ -43,7 +43,7 @@ async function xoaHangHoa() {
 	window.localStorage.setItem("userCart", JSON.stringify(_userCart));
 	userCart.value = _userCart;
 	donDatHang.value = _donDatHang;
-	ElNotification.success("Thêm vào giỏ hàng thành công");
+	ElNotification.success("Xóa hàng hóa khỏi giỏ hàng thành công");
 	xoaHangHoaModalVisible.value = false;
 }
 
@@ -105,7 +105,7 @@ onMounted(() => {
 	<div>
 		<div class="container" v-if="userCart.length === 0">
 			<h5 style="padding: 20px 0">Giỏ hàng của bạn đang trống</h5>
-			<h5>Hãy bắt đầu bằng việc thêm một món đồ vào giỏ hàng nhe</h5>
+			<h5>Hãy bắt đầu bằng việc thêm một món đồ vào giỏ hàng</h5>
 
 			<h5 class="mt-5">
 				<router-link to="/danh-muc-san-pham">

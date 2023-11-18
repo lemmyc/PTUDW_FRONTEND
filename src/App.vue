@@ -5,14 +5,12 @@ import AppFooter from './components/layout/AppFooter.vue';
 </script>
 
 <template>
-  <header>
     <div>
       <AppHeader />
       <RouterView />
       <el-divider></el-divider>
       <AppFooter/>
     </div>
-  </header>
 </template>
 
 <style >

@@ -16,8 +16,8 @@ const isLoading = ref(false);
 const formRef = ref(null);
 
 const form = reactive({
-	taikhoan: "nhanvien1",
-	matkhau: "nhanvien1",
+	taikhoan: "",
+	matkhau: "",
 });
 
 const formRules = reactive({
