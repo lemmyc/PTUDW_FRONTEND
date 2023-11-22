@@ -28,6 +28,56 @@ function formatDateTime(dateTimeStr) {
 	const year = date.getFullYear();
 	return `${day}/${month}/${year}`;
 }
+function capNhatTongTien() {
+	const storedUserCart = window.localStorage.getItem("userCart");
+	const storedDonDatHang = window.localStorage.getItem("donDatHang");
+	if (storedUserCart) {
+		userCart.value = JSON.parse(storedUserCart);
+	}
+	if (storedDonDatHang) {
+		donDatHang.value = JSON.parse(storedDonDatHang);
+	}
+	if (donDatHang.value.length > 0) {
+		let dsHangHoa = toRaw(donDatHang.value);
+		tongTien.value = 0;
+		for (let hangHoa of dsHangHoa) {
+			tongTien.value += hangHoa.thanhtien*hangHoa.soluong
+		}
+	}
+}
+function capNhatSoLuong(scope_row) {
+	let _hangHoa = toRaw(scope_row)
+	let { mahanghoa, soluong, giagoc, phantramgiam, giadagiam, thanhtien, ...rest } = _hangHoa;
+	_hangHoa = {
+		mahanghoa,
+		soluong,
+		giagoc,
+		phantramgiam,
+		giadagiam,
+		thanhtien: giadagiam*soluong,
+		...rest
+	};
+	let _donDatHang = JSON.parse(window.localStorage.getItem("donDatHang")) || []; //Gui di
+	let _userCart = JSON.parse(window.localStorage.getItem("userCart")) || []; //Hien thi
+	let posExist = _donDatHang.findIndex(element => element.mahanghoa === _hangHoa.mahanghoa);
+	// let { mahanghoa, soluong, giagoc, phantramgiam, giadagiam, thanhtien } = _hangHoa
+	let donDatHangItem = { mahanghoa, soluong, giagoc, phantramgiam, giadagiam, thanhtien };
+	donDatHangItem.thanhtien = giadagiam*soluong
+	console.log(_hangHoa)
+	console.log(donDatHangItem)
+
+
+
+	if (posExist !== -1) {
+		_donDatHang.splice(posExist, 1, donDatHangItem)
+		_userCart.splice(posExist, 1, _hangHoa)
+	}
+	window.localStorage.setItem("donDatHang", JSON.stringify(_donDatHang));
+	window.localStorage.setItem("userCart", JSON.stringify(_userCart));
+	userCart.value = _userCart;
+	donDatHang.value = _donDatHang;
+	capNhatTongTien();
+}
 
 async function xoaHangHoa() {
 	// eslint-disable-next-line vue/no-ref-as-operand
@@ -43,9 +93,11 @@ async function xoaHangHoa() {
 	window.localStorage.setItem("userCart", JSON.stringify(_userCart));
 	userCart.value = _userCart;
 	donDatHang.value = _donDatHang;
+	capNhatTongTien();
 	ElNotification.success("Xóa hàng hóa khỏi giỏ hàng thành công");
 	xoaHangHoaModalVisible.value = false;
 }
+
 
 async function themDonDatHang() {
 
@@ -61,11 +113,14 @@ async function themDonDatHang() {
 			"tongtien": tongTien.value
 		}
 
-		if(
+		if (
 			// ms -> day
-			(((new Date(payload.ngaygh)) - (new Date(payload.ngaydh)))
-			/ (1000 * 60 * 60 * 24)) >= 5 
-		){
+			(payload.ngaygh == null) ||
+			(	(payload.ngaygh != null) && 
+				((((new Date(payload.ngaygh)) - (new Date(payload.ngaydh)))
+				/ (1000 * 60 * 60 * 24)) >= 5)
+			)
+		) {
 			await donDatHangService.create(payload);
 			ElNotification.success("Tạo đơn đặt hàng thành công. Cảm ơn quý khách đã ủng hộ DANGLE-PC");
 			userCart.value = [];
@@ -74,7 +129,7 @@ async function themDonDatHang() {
 			window.localStorage.setItem("donDatHang", JSON.stringify([]));
 			donDathangVisible.value = false;
 		}
-		else{
+		else {
 			ElNotification.error("Ngày giao hàng chỉ định phải sau ngày đặt hàng tối thiểu 5 ngày.");
 		}
 
@@ -83,6 +138,9 @@ async function themDonDatHang() {
 	}
 
 }
+
+
+
 onMounted(() => {
 	const storedUserCart = window.localStorage.getItem("userCart");
 	const storedDonDatHang = window.localStorage.getItem("donDatHang");
@@ -95,7 +153,7 @@ onMounted(() => {
 	if (donDatHang.value.length > 0) {
 		let dsHangHoa = toRaw(donDatHang.value);
 		for (let hangHoa of dsHangHoa) {
-			tongTien.value += hangHoa.thanhtien
+			tongTien.value += hangHoa.thanhtien*hangHoa.soluong
 		}
 	}
 });
@@ -141,9 +199,12 @@ onMounted(() => {
 					</template>
 				</el-table-column>
 				<el-table-column prop="soluong" label="Số lượng" header-align="center" align="right">
-					<template v-slot="scope"><el-input-number placeholder="Số lượng cần đặt" v-model="scope.row.soluong"
-							:min="1" :max="scope.row.soluongkho" controls-position="right" size="large"
-							style="width: 80px;"></el-input-number></template>
+					<template v-slot="scope">
+						<el-input-number placeholder="Số lượng cần đặt" v-model="scope.row.soluong"
+							:min="1" :max="scope.row.soluongkho" @change="capNhatSoLuong(scope.row)" controls-position="right"
+							size="large" style="width: 80px;">
+						</el-input-number>
+					</template>
 				</el-table-column>
 				<el-table-column prop="phantramgiam" label="Phần trăm giảm" header-align="center" align="right">
 					<template v-slot="scope">
@@ -157,13 +218,13 @@ onMounted(() => {
 				</el-table-column>
 				<el-table-column prop="thanhtien" label="Thành tiền" header-align="center" align="right">
 					<template v-slot="scope">
-						{{ currencyFormater.format(scope.row.giadagiam * scope.row.soluong) }}
+						{{ currencyFormater.format(scope.row.thanhtien * scope.row.soluong) }}
 					</template>
 				</el-table-column>
 				<el-table-column prop="" label="Thao tác" align="center">
 					<template v-slot="scope">
 						<el-button type="danger" :icon="Delete" circle
-							@click="xoaHangHoaModalVisible = true; currentHangHoa.value = scope.row; tenHangHoaSeXoa = scope.row.tenhanghoa" />
+							@click="xoaHangHoaModalVisible = true; currentHangHoa.value = scope.row; tenHangHoaSeXoa = scope.row.tenhanghoa;" />
 					</template>
 				</el-table-column>
 			</el-table>
@@ -182,7 +243,7 @@ onMounted(() => {
 			<h5>Bạn chắc chứ ?</h5>
 
 			<template #footer>
-				<el-button @click="xoaHangHoaModalVisible = false">Hủy</el-button>
+				<el-button @click="xoaHangHoaModalVisible = false;">Hủy</el-button>
 				<el-button @click="xoaHangHoa" type="danger">
 					Đúng, hãy xóa nó
 				</el-button>
