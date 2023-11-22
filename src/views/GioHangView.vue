@@ -41,7 +41,7 @@ function capNhatTongTien() {
 		let dsHangHoa = toRaw(donDatHang.value);
 		tongTien.value = 0;
 		for (let hangHoa of dsHangHoa) {
-			tongTien.value += hangHoa.thanhtien*hangHoa.soluong
+			tongTien.value += hangHoa.thanhtien
 		}
 	}
 }
@@ -153,7 +153,7 @@ onMounted(() => {
 	if (donDatHang.value.length > 0) {
 		let dsHangHoa = toRaw(donDatHang.value);
 		for (let hangHoa of dsHangHoa) {
-			tongTien.value += hangHoa.thanhtien*hangHoa.soluong
+			tongTien.value += hangHoa.thanhtien
 		}
 	}
 });
@@ -218,7 +218,7 @@ onMounted(() => {
 				</el-table-column>
 				<el-table-column prop="thanhtien" label="Thành tiền" header-align="center" align="right">
 					<template v-slot="scope">
-						{{ currencyFormater.format(scope.row.thanhtien * scope.row.soluong) }}
+						{{ currencyFormater.format(scope.row.thanhtien) }}
 					</template>
 				</el-table-column>
 				<el-table-column prop="" label="Thao tác" align="center">
